@@ -1,7 +1,6 @@
 package com.mdlb.frontend;
 
 import java.awt.Color;
-
 import javax.swing.JPanel;
 
 /**
