@@ -4,7 +4,7 @@ package com.mdlb.backend;
  * Class that holds the produced data
  */
 public class Message {
-  private int id;
+  public int id;
   private double data;
 
   public Message(int id, double data) {

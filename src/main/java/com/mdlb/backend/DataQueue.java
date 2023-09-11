@@ -12,8 +12,9 @@ public class DataQueue {
   private final Object FULL_QUEUE = new Object();
   private final Object EMPTY_QUEUE = new Object();
   public boolean runFlag = true;
+  public int index = 1;
 
-  DataQueue(int maxSize) {
+  public DataQueue(int maxSize) {
     this.maxSize = maxSize;
   }
 
@@ -21,6 +22,7 @@ public class DataQueue {
    * Method called by the producer when the queue is full, waiting to be consumed
    */
   public void waitOnFull() throws InterruptedException, IllegalMonitorStateException {
+    System.out.println("Productor: Cola llena. Entrando a dormir");
     synchronized (FULL_QUEUE) {
       // Producers sleep here if the queue is full
       FULL_QUEUE.wait();
@@ -43,6 +45,7 @@ public class DataQueue {
    * produced
    */
   public void waitOnEmpty() throws InterruptedException, IllegalMonitorStateException {
+    System.out.println("                                                  Consumidor: Cola vacía. Entrando a dormir");
     synchronized (EMPTY_QUEUE) {
       // Consumers sleep here if the queue is empty
       EMPTY_QUEUE.wait();
@@ -65,10 +68,15 @@ public class DataQueue {
    * 
    * @param message The data object produced
    */
-  public void add(Message message) {
+  public int add(Message message) {
+    if (this.isFull())
+      throw new IllegalStateException("Attempt to add to full queue");
     synchronized (queue) {
+      message.id = index;
+      index++;
       queue.add(message);
     }
+    return message.id;
   }
 
   /**
@@ -84,5 +92,9 @@ public class DataQueue {
 
   public boolean isFull() {
     return queue.size() == this.maxSize;
+  }
+
+  public boolean isEmpty() {
+    return queue.isEmpty();
   }
 }
