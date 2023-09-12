@@ -11,8 +11,16 @@ public class MainWindow extends JFrame /** implements ItemListener */
 {
   // private JToggleButton button;
 
-  public MainWindow() {
+  /**
+   * Creates the main window, specifying the required configurations
+   * 
+   * @param producers The number of graphical producers to be created
+   * @param consumers The number of graphical consumers to be created
+   * @param queueSize The size of the queue
+   */
+  public MainWindow(int producers, int consumers, int queueSize) {
     ProducerPanel producersPanel = new ProducerPanel();
+    producersPanel.setNumberOfProducers(producers);
     add(producersPanel);
 
     JPanel consumersPanel = new JPanel();

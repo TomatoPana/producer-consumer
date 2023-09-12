@@ -70,7 +70,7 @@ public class DataQueue {
    */
   public int add(Message message) {
     if (this.isFull())
-      throw new IllegalStateException("Attempt to add to full queue");
+      System.err.println("Attempt to add to full queue");
     synchronized (queue) {
       message.id = index;
       index++;
@@ -85,6 +85,8 @@ public class DataQueue {
    * @return The data object consumed
    */
   public Message remove() {
+    if (this.isEmpty())
+      System.err.println("Attempt to remove from empty queue");
     synchronized (queue) {
       return queue.poll();
     }

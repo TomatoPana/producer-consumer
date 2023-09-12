@@ -1,18 +1,17 @@
 package com.mdlb.backend;
 
 import java.util.Random;
-import java.util.concurrent.locks.ReentrantLock;
 
 /**
- * Implementation of the Producer Class
+ * Implementation of the Producer Thread Class
  */
-public class Producer implements Runnable {
+public class Producer extends Thread {
 
   private final DataQueue dataQueue;
-  // final ReentrantLock lock = new ReentrantLock();
   private int index = 1;
 
-  public Producer(DataQueue dataQueue) {
+  public Producer(DataQueue dataQueue, String name) {
+    super(name);
     this.dataQueue = dataQueue;
   }
 
@@ -44,7 +43,7 @@ public class Producer implements Runnable {
         break;
       }
       int index = dataQueue.add(message);
-      System.out.println("Productor: Elemento agregado. Indice: " + index);
+      System.out.println(this.getName() + ": Elemento agregado. Indice: " + index);
       dataQueue.notifyAllForEmpty();
     }
   }
@@ -55,7 +54,7 @@ public class Producer implements Runnable {
 
     // Generate a random number between 1000 and 5000
     int randomNumber = random.nextInt(2001) + 1000;
-    System.out.println("Productor: Produciendo. ETA: " + (randomNumber / 1000) + " segundos");
+    System.out.println(this.getName() + ": Produciendo. ETA: " + (randomNumber / 1000) + " segundos");
     try {
       Thread.sleep(randomNumber);
     } catch (InterruptedException e) {
@@ -65,7 +64,7 @@ public class Producer implements Runnable {
     return message;
   }
 
-  public void stop() {
+  public void safeStop() {
     dataQueue.runFlag = false;
     // The producer needs to wake up to terminate
     dataQueue.notifyAllForFull();
